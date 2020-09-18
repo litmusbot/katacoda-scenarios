@@ -35,5 +35,3 @@ Litmus takes a cloud-native approach to create, manage and monitor chaos. Chaos 
 [!<img src = 'https://i.ibb.co/1sB5hwY/maxresdefault.jpg' width='400'/>](https://youtu.be/W5hmNbaYPfM)
 
 <br>
-
-<span style="color:green"> **-- MayaData Inc**</span>
