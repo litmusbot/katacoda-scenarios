@@ -16,18 +16,16 @@
 
 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpmcdeadline2.files.wordpress.com%2F2016%2F09%2Ftwitter-logo.jpg&f=1&nofb=1" alt="LitmusChaos Twitter" width="12"> (https://twitter.com/LitmusChaos/) **Follow us on Twitter!** [**@LitmusChaos**](https://twitter.com/LitmusChaos/)
 
-<a href="https://litmuschaos.io"><img src="https://i.ibb.co/QKSMq9g/Screenshot-from-2020-09-14-18-54-05.png" align="right" width="250px" /></a>
+## Interactive Katacoda Scenarios
+
+[![](http://shields.katacoda.com/katacoda/litmusbot/count.svg)](https://www.katacoda.com/litmusbot "Get your profile on Katacoda.com")
+
+Visit https://www.katacoda.com/litmusbot to view the profile and interactive scenarios
 
 ## **Learn about Litmus** 😮😎
 
 Litmus is a toolset to do cloud-native chaos engineering. Litmus provides tools to orchestrate chaos on Kubernetes to help SREs find weaknesses in their deployments. SREs use Litmus to run chaos experiments initially in the staging environment and eventually in production to find bugs, vulnerabilities. Fixing the weaknesses leads to increased resilience of the system.
 <br><br>
-
-# Interactive Katacoda Scenarios
-
-[![](http://shields.katacoda.com/katacoda/litmusbot/count.svg)](https://www.katacoda.com/litmusbot "Get your profile on Katacoda.com")
-
-Visit https://www.katacoda.com/litmusbot to view the profile and interactive scenarios
 
 ### Writing Scenarios
 Visit https://www.katacoda.com/docs to learn more about creating Katacoda scenarios
