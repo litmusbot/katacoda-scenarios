@@ -1,91 +1,66 @@
 <br>
 
-## Prepare ChaosEngine
+## Observe and Verify Chaos
 
 <br>
 
-**Check the current number of the Pods**
+**Observe the Chaos results**
 
 <br>
 
-You would only be able to see the `nginx` pod in running state.
+<span style="color:green">ChaosResult CR name will be `<chaos-engine-name>-<chaos-experiment-name>`</span>
 
-`kubectl get pods`{{execute}}
+`kubectl describe chaosresult nginx-chaos-container-kill`{{execute}}
 
-<span style="color:green">**Expected Output:**</span>
-
-```
-nginx-86c57db685-vd8k6   1/1     Running   0         <TimeStamp>
-```
+Describe the ChaosResult CR to know the status of each experiment. The `status.verdict` is set to `Awaited` when the experiment is in progress, eventually changing to either `Pass` or `Fail`.
 
 <br>
 
-**Explore the ChaosEngine yaml**
-
-ChaosEngine connects the application instance to a Chaos Experiment.
-
-Explore the ChaosEngine yaml [https://hub.litmuschaos.io/api/chaos/1.11.1?file=charts/generic/container-kill/engine.yaml](https://hub.litmuschaos.io/api/chaos/1.11.1?file=charts/generic/container-kill/engine.yaml)
-
-* Provide the application info in `spec.appinfo`
-* Override the experiment tunables if desired in `experiments.spec.components.env`
-* To understand the values to provided in a ChaosEngine specification, refer [ChaosEngine Concepts](https://docs.litmuschaos.io/docs/chaosengine/)
-
-> Note: Ensure that the CHAOS_INTERVAL used in the experiment is fairly high (i.e., enough time is provided for app recovery). Else, it can cause an exponential increase in the backOff delay, causing the app to stay in CrashLoopBackOff state for much longer'
-
-**Experiment Tunables**
-
-| Variables       | Description     | Specify In ChaosEngine     | Notes     |
-| :------------- | :----------: | -----------: | -----------: |
-| TARGET_CONTAINER | The name of container to be killed inside the pod  | Optional    | If the TARGET_CONTAINER is not provided it will delete the first container  |
-| CHAOS_INTERVAL | Time interval b/w two successive container kill (in sec)	 | Optional    | If the CHAOS_INTERVAL is not provided it will take the default value of 10s |
-| TOTAL_CHAOS_DURATION | The time duration for chaos injection (seconds)  | Optional  | Defaults to 20s |
-| PODS_AFFECTED_PERC | The Percentage of total pods to target  | Optional    | Defaults to 0 (corresponds to 1 replica), provide numeric value only |
-| TARGET_PODS | Comma separated list of application pod name subjected to container kill chaos  | Optional    | If not provided, it will select target pods randomly based on provided appLabels |
-| LIB_IMAGE	 | LIB Image used to kill the container  | Optional  | Defaults to `litmuschaos/go-runner:1.11.0` |
-| LIB | The category of lib use to inject chaos	  | Optional  | Default value: litmus, supported values: pumba and litmus |
-| RAMP_TIME | Period to wait before injection of chaos in sec	| Optional  |  |
-| SEQUENCE | It defines sequence of chaos execution for multiple target pods  | Optional  | Default value: parallel. Supported: serial, parallel |
-| SOCKET_PATH | Path of the containerd/crio/docker socket file  | Optional  | Defaults to `/var/run/docker.sock` |
-| CONTAINER_RUNTIME | Container runtime interface for the cluster  | Optional  | Defaults to docker, supported values: docker, containerd and crio for litmus and only docker for pumba LIB |
-| INSTANCE_ID | A user-defined string that holds metadata/info about current run/instance of chaos. Ex: 04-05-2020-9-00. This string is appended as suffix in the chaosresult CR name.	  | Optional  | Ensure that the overall length of the chaosresult CR is still < 64 characters |
-
-## Run Chaos
-
-<br>
-
-**Apply the ChaosEngine manifest to trigger the experiment.**
-
-`kubectl apply -f https://hub.litmuschaos.io/api/chaos/1.11.1?file=charts/generic/container-kill/engine.yaml`{{execute}}
+> If you receive an `Error from server (NotFound): chaosresults.litmuschaos.io "nginx-chaos-container-kill" not found` response from the server, wait for a minutes and try again. It takes a little bit of time for the Chaos Engine to run.
 
 <span style="color:green">**Expected Output:**</span>
 
 ```bash
-chaosengine.litmuschaos.io/nginx-chaos created
+Name:         nginx-chaos-container-kill
+Namespace:    default
+Labels:       app.kubernetes.io/component=experiment-job
+              app.kubernetes.io/part-of=litmus
+              app.kubernetes.io/version=1.11.1
+              chaosUID=869eb23b-aed2-44eb-89ee-5e4bb457ea51
+              controller-uid=22d767c7-996e-414c-8cbe-41d945db214a
+              job-name=container-kill-48vw7t
+              name=nginx-chaos-container-kill
+Annotations:  <none>
+API Version:  litmuschaos.io/v1alpha1
+Kind:         ChaosResult
+Metadata:
+  Creation Timestamp:  2020-12-30T05:23:41Z
+  Generation:          2
+  Resource Version:    1141
+  Self Link:           /apis/litmuschaos.io/v1alpha1/namespaces/default/chaosresults/nginx-chaos-container-kill
+  UID:                 e7ca3165-6d57-4614-a9a1-ce210833acc6
+Spec:
+  Engine:      nginx-chaos
+  Experiment:  container-kill
+Status:
+  Experimentstatus:
+    Fail Step:                 N/A
+    Phase:                     Completed
+    Probe Success Percentage:  100
+    Verdict:                   Pass
+Events:
+  Type    Reason   Age   From                         Message
+  ----    ------   ----  ----                         -------
+  Normal  Awaited  2m8s  container-kill-e2pdaa-fpwjm  experiment: container-kill, Result: Awaited
+  Normal  Pass     86s   container-kill-e2pdaa-fpwjm  experiment: container-kill, Result: Pass
 ```
 
 <br>
 
-**Check the health of the Pod**
+_Incase you want to try running chaos on a separate image or namespace, check out the [official documentation](https://docs.litmuschaos.io/docs/getstarted/) and get your chaos experiments up and running in minutes_
 
 <br>
 
-You would be able to see that two new pods
+## <span style="color:green">**Congratulations! You have successfully executed your chaos experiment with Litmus**</span>
 
--   `nginx-chaos-runner`
--   `container-kill-<hash>`
-
-would be created and age would be the latest time stamp. You'd be able to see the status of the pods changing from `Running` to `ContainerCreating` to `Completed` to`Terminating` based on the chaos applied. And the container on which it's applied transitioning from `Running` to `Error` to `CrashLoopBackOff` to `Running` again if your container is resilient.
-
-`watch -n 1 kubectl get pods`{{execute}}
-
-<span style="color:green">**Expected Output:**</span>
-
-```
-nginx-86c57db685-wbdj5    1/1     Running     0          <TimeStamp>
-nginx-chaos-runner        1/1     Running     0          <TimeStamp>
-container-kill-e2pdaa-fpwjm   0/1     Completed   0          <TimeStamp>
-```
-
-**Keep a check on the restart count**
-
-Each time the container-kill executes your container(`nginx-86c57db685-wbdj5` in this case) would go down and restart back up if it is resilient enough. Keep a check on the number of times the container is restarted and note the state transition from `Error` to `Running`.
+**Click on Continue to Finish this Scenario**

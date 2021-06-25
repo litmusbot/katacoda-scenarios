@@ -30,18 +30,13 @@
 				"code": "clear_screen.sh"
 			},
 			{
-				"title": "Annotate your application",
+				"title": "Prepare, Tune and Run Chaos",
 				"text": "step6.md",
 				"code": "clear_screen.sh"
 			},
 			{
-				"title": "Prepare, Tune and Run Chaos",
-				"text": "step7.md",
-				"code": "clear_screen.sh"
-			},
-			{
 				"title": "Verify and Observe the results",
-				"text": "step8.md",
+				"text": "step7.md",
 				"code": "clear_screen.sh"
 			}
 		],

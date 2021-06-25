@@ -35,7 +35,7 @@ Container kill supports `litmus` and `pumba` LIB. The container runtime can be c
 
 **Install the Chaos Experiment using the following command**
 
-`kubectl apply -f https://hub.litmuschaos.io/api/chaos/1.11.1?file=charts/generic/container-kill/experiment.yaml`{{execute}}
+`kubectl apply -f https://hub.litmuschaos.io/api/chaos/1.13.6?file=charts/generic/container-kill/experiment.yaml`{{execute}}
 
 <span style="color:green">**Expected Output:**</span>
 
